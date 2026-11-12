@@ -5,10 +5,7 @@
 name: comment-pr
 
 on:
-  workflow_run:
-    workflows: ["receive-pr"]
-    types:
-      - completed
+  workflow_dispatch:
 
 jobs:
   post-suggestions:
@@ -22,13 +19,13 @@ jobs:
       ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: ${{github.event.workflow_run.head_branch}}
           repository: ${{github.event.workflow_run.head_repository.full_name}}
 
       # Download the patch
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: patch
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -39,7 +36,7 @@ jobs:
           rm git-diff.patch
 
       # Download the PR number
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: pr_number
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -51,7 +48,7 @@ jobs:
           rm pr_number.txt
 
       # Post suggestions as a comment on the PR
-      - uses: googleapis/code-suggester@v4
+      - uses: googleapis/code-suggester@589b3ac11ac2575fd561afa45034907f301a375b # v4
         with:
           command: review
           pull_number: ${{ env.PR_NUMBER }}
